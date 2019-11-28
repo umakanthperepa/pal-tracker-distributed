@@ -12,6 +12,7 @@ public class ProjectClient {
         this.endpoint = registrationServerEndpoint;
     }
 
+
     public ProjectInfo getProject(long projectId) {
         return restOperations.getForObject(endpoint + "/projects/" + projectId, ProjectInfo.class);
     }
