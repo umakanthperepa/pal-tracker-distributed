@@ -8,7 +8,9 @@ applications:
   env:
     MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: '*'
     MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS: always
+    GRANT_TYPE: client_credentials
     JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
   services:
   - tracker-registration-database
   - tracker-service-registry
+  - tracker-sso
