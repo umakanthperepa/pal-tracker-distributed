@@ -1,0 +1,93 @@
+//Assignment Submission 
+gradle wrapper
+./gradlew tasks
+./gradlew testAssignment
+
+//Building a Spring Boot App 
+cf login -a https://api.run.pivotal.io
+// FROM UI - https://console.run.pivotal.io
+cf start pal-tracker
+
+//Configuring an App 
+./gradlew clean build
+./gradlew clean build -x test
+./gradlew bootRun
+cf restart pal-tracker
+cf restage pal-tracker
+
+//Deployment Pipelines 
+In https://travis-ci.org/saranag/pal-tracker/settings set the GITHUB_OAUTH_TOKEN & GITHUB_USERNAME with CF Details.
+travis 	Qr3BLKVWcqdx7YZMeU1TvA
+GITHUB_OAUTH_TOKEN cb370a9066b3876261fd359705c5558786c22b60
+
+//Spring MVC with REST Endpoints 
+Test Driven Development
+curl -i http://pal-tracker-saran-bas.cfapps.io/time-entries
+curl -i -XPOST -H"Content-Type: application/json" http://pal-tracker-saran-bas.cfapps.io/time-entries 
+	-d"{\"projectId\": 3, \"userId\": 2, \"date\": \"2019-01-01\", \"hours\": 8}"
+curl -i http://pal-tracker-saran-bas.cfapps.io/time-entries/1
+curl -i -XDELETE -H"Content-Type: application/json" http://pal-tracker-saran-bas.cfapps.io/time-entries/1
+
+//Cloud Foundry Services & Database Migrations
+ Local/JUNIT
+	mysql installation
+	mysql -u tracker
+	use tracker_dev;
+	describe time_entries;
+	flyway -url="jdbc:mysql://localhost:3306/tracker_dev" -locations=filesystem:databases/tracker clean migrate
+ CF
+	cf marketplace
+	cf create-service
+	cf bind-service
+	cf create-service-key $service_name $service_key > /dev/null
+	cf ssh -N -L 63306:$db_host:$db_port $app_name & cf_ssh_pid=$!
+	flyway-*/flyway -url="jdbc:mysql://127.0.0.1:63306/$db_name" \
+        -locations=filesystem:"$script_dir"/databases/tracker \
+        -user="$db_username" \
+        -password="$db_password" \
+        migrate
+	// To connect to CF MySQL
+	cf install-plugin cf-mysql-plugin-linux-amd64
+	cf mysql tracker-database
+	show tables;
+	select * from flyway_schema_history
+
+//Spring JDBC Template
+
+//Health Monitoring 
+cf set-env pal-tracker MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE "*"
+cf set-env pal-tracker MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS always
+/actuator/mappings
+/actuator/env
+/actuator/beans
+/actuator/health 
+/actuator/metrics
+
+// Scaling an App on Cloud Foundry 
+// 1. list the apps
+cf app
+// 2. list the instances and configuration of pal-tracker
+cf app pal-tracker
+// 3. set the memory for app pal-tracker
+cf scale pal-tracker -m 768Mb -f 
+// 4. set the number of instance of pal-tracker
+cf scale pal-tracker -i 5 -f
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
